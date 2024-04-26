@@ -1,0 +1,59 @@
+PROJECT_NAME = Compiler_with_vscode
+INC_DIR = Lib/Inc
+SRC_DIR = Lib/Src
+OUTPUT_DIR = Output
+STARTUP_DIR = Startup_file
+LINKER_DIR = Linker
+MAIN_DIR = Core
+
+#compiler
+CC = arm-none-eabi-gcc
+#asembler
+AS = arm-none-eabi-as
+#linker
+LD = arm-none-eabi-ld
+#objcopy
+OBJCOPY = arm-none-eabi-objcopy
+#size
+SIZE = arm-none-eabi-size
+#st-link
+STLINK = ST-LINK_CLI
+
+CFLAGS = -mcpu=cortex-m3 -mthumb -Wall -std=gnu11 -I$(INC_DIR)/
+ASFLAGS = -mcpu=cortex-m3 -mthumb
+LDFLAGS = -mcpu=cortex-m3 -T"$(LINKER_DIR)/STM32F103C8TX_FLASH.ld" -Wl,-Map=$(OUTPUT_DIR)/$(PROJECT_NAME).map -Wl,--no-warn-rwx -Wl,--gc-sections -N -static
+STFLAGS = $(OUTPUT_DIR)/$(PROJECT_NAME).bin
+
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+OBJS = $(patsubst $(SRC_DIR)/%.c,$(OUTPUT_DIR)/%.o,$(SRCS))
+
+all: $(OUTPUT_DIR)/main.o $(OUTPUT_DIR)/startup_stm32f103c8tx.o $(OUTPUT_DIR)/$(PROJECT_NAME).elf hex bin size
+
+$(OUTPUT_DIR)/main.o: $(MAIN_DIR)/main.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+	
+$(OUTPUT_DIR)/startup_stm32f103c8tx.o: $(STARTUP_DIR)/startup_stm32f103c8tx.s
+	$(AS) -c $(ASFLAGS) -o $@ $<
+
+$(OUTPUT_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+$(OUTPUT_DIR)/$(PROJECT_NAME).elf: $(OBJS) $(OUTPUT_DIR)/main.o $(OUTPUT_DIR)/startup_stm32f103c8tx.o
+	$(CC) $(OBJS) $(OUTPUT_DIR)/main.o $(OUTPUT_DIR)/startup_stm32f103c8tx.o $(LDFLAGS) -o $@ -e Reset_Handler
+hex:
+	$(OBJCOPY) -O ihex $(OUTPUT_DIR)/$(PROJECT_NAME).elf $(OUTPUT_DIR)/$(PROJECT_NAME).hex
+bin:
+	$(OBJCOPY) -O binary $(OUTPUT_DIR)/$(PROJECT_NAME).elf $(OUTPUT_DIR)/$(PROJECT_NAME).bin
+size:
+	$(SIZE) $(OUTPUT_DIR)/$(PROJECT_NAME).elf
+clear:
+	rm -rf $(OUTPUT_DIR)/*
+flash:
+	$(STLINK) -c SWD -P $(STFLAGS) 0x08000000 -V -Run
+test: $(SRCS) $(OBJS)
+	@echo "gia tri : $(OBJS)"
+	@echo "gia tri : $(SRCS)"
+	@echo "gia tri @ : $@"
+	@echo "gia tri ^: $^"
+	@echo "gia tri <: $<"
+.PHONY: all hex bin size clear

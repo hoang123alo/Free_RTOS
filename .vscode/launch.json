@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug STM32",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "cwd": "${workspaceRoot}",
+            "executable": "./Output/Compiler_with_vscode.elf",
+            "device": "STM32F103C8",
+            "interface": "swd",
+            "svdFile": "D:\\Learn\\STM\\debug\\cmsis-svd-stm32\\stm32f1\\STM32F103.svd",
+            "configFiles": [
+                "D:\\Learn\\STM\\debug\\openocd-20231002\\OpenOCD-20231002-0.12.0\\share\\openocd\\scripts\\interface\\stlink-v2-1.cfg",
+                "D:\\Learn\\STM\\debug\\openocd-20231002\\OpenOCD-20231002-0.12.0\\share\\openocd\\scripts\\target\\stm32f1x.cfg"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+All:
+	arm-none-eabi-gcc -c main.c -mcpu=cortex-m3 -std=gnu11 -ILib/Inc/ -o build/main.o
+	arm-none-eabi-gcc -c Lib/Src/system_init.c -mcpu=cortex-m3 -std=gnu11 -ILib/Inc/ -o build/system_init.o
+	arm-none-eabi-gcc -c Lib/Src/timer.c -mcpu=cortex-m3 -std=gnu11 -ILib/Inc/ -o build/timer.o
+	arm-none-eabi-gcc -c Lib/Src/gpio.c -mcpu=cortex-m3 -std=gnu11 -ILib/Inc/ -o build/gpio.o
+	arm-none-eabi-gcc -c -x assembler-with-cpp startup_stm32f103c8tx.s -mcpu=cortex-m3 -std=gnu11 -o build/startup.o
+	arm-none-eabi-gcc build/*.o -mcpu=cortex-m3 -T"STM32F103C8TX_FLASH.ld" "-Wl,-Map=file.map" "-Wl,--gc-sections" -static -o build/blink.elf
+	arm-none-eabi-objcopy -O ihex build/blink.elf build/blink.hex
+	arm-none-eabi-objcopy -O binary build/blink.elf build/blink.bin
+	arm-none-eabi-size build/blink.elf
+Clear:
+	rm build/*
+Flash:
+	ST-LINK_CLI -c SWD -P build/blink.hex -V -Run
+
+	

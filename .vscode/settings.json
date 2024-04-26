@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "system_init.h": "c",
+        "timer.h": "c",
+        "gpio.h": "c"
+    },
+    "cortex-debug.stm32cubeprogrammer": "",
+    "cortex-debug.variableUseNaturalFormat": true,
+    "cSpell.words": [
+        "gpio",
+        "GPIOB",
+        "GPIOC",
+        "rawdata",
+        "SMPR"
+    ]
+}
