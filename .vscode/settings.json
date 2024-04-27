@@ -13,5 +13,6 @@
         "GPIOC",
         "rawdata",
         "SMPR"
-    ]
+    ],
+    "cmake.sourceDirectory": "D:/Learn/STM/Free_RTOS/FreeRTOS/backoffAlgorithm/test"
 }

@@ -10,6 +10,9 @@
 
 /*--------------------------Include header files------------------------------*/
 #include<stdint.h>
+#include <string.h>
+#include <stdarg.h>
+#include<stdio.h>
 #include"stm32f103xx.h"
 #include"cortex_m3.h"
 
@@ -18,6 +21,7 @@
 
 #include"gpio.h"
 #include"adc.h"
+#include"uart.h"
 #include"sleep.h"
 /*----------------------------Declare functions------------------------------*/
 

@@ -22,14 +22,14 @@ AS = arm-none-eabi-as
 LD = arm-none-eabi-ld
 #objcopy
 OBJCOPY = arm-none-eabi-objcopy
-#size
+#size 
 SIZE = arm-none-eabi-size
 #st-link
 STLINK = ST-LINK_CLI
 
-CFLAGS = -mcpu=cortex-m3 -mthumb -Wall -std=gnu11 -I$(INC_DIR)/ -I$(INC_RTOS_DIR)/ -I$(INC_PORT_DIR)/
+CFLAGS =  -u _printf_float -u _scanf_float -mcpu=cortex-m3 -mthumb -Wall -std=gnu11 -I$(INC_DIR)/ -I$(INC_RTOS_DIR)/ -I$(INC_PORT_DIR)/
 ASFLAGS = -mcpu=cortex-m3 -mthumb
-LDFLAGS = -mcpu=cortex-m3 -T"$(LINKER_DIR)/STM32F103C8TX_FLASH.ld" -Wl,-Map=$(OUTPUT_DIR)/$(PROJECT_NAME).map -Wl,--no-warn-rwx -Wl,--gc-sections -N -static
+LDFLAGS = -u _printf_float -u _scanf_float -mcpu=cortex-m3 -T"$(LINKER_DIR)/STM32F103C8TX_FLASH.ld" -Wl,-Map=$(OUTPUT_DIR)/$(PROJECT_NAME).map -Wl,--no-warn-rwx -Wl,--gc-sections -N -static -specs=nano.specs -specs=nosys.specs 
 STFLAGS = $(OUTPUT_DIR)/$(PROJECT_NAME).hex
 
 SRCS = $(wildcard $(SRC_DIR)/*.c)
@@ -38,7 +38,7 @@ OBJS = $(patsubst $(SRC_DIR)/%.c,$(OUTPUT_DIR)/%.o,$(SRCS))
 SRCS1 = $(wildcard $(SRC_RTOS_DIR)/*.c)
 OBJS1 = $(patsubst $(SRC_RTOS_DIR)/%.c,$(OUTPUT_DIR)/%.o,$(SRCS1))
 
-all: $(OUTPUT_DIR)/$(PROJECT_NAME).elf flash
+all: $(OUTPUT_DIR)/$(PROJECT_NAME).elf
 
 $(OUTPUT_DIR)/main.o: $(MAIN_DIR)/main.c
 	$(CC) -c $(CFLAGS) -o $@ $<
